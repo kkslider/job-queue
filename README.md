@@ -57,6 +57,8 @@ The response body from the server will contain the `state` of the job and other 
         }
     }
 
+## Is there a UI to view all my jobs?
+Kue provides a small Express application to view jobs filtered by status. To access it, run `node_modules/kue/bin/kue-dashboard -p 3050 -r redis://127.0.0.1:6379` and direct your browser to `http://localhost:3050`.
 ## Are there tests?
 
 A test case has been written for each HTTP call. `Supertest` and `Tape` are used for API testing and assertions, respectively. To run the tests, simply run `npm test`. 
