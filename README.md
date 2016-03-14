@@ -32,7 +32,7 @@ The response body from the server will contain the id of the newly created job:
     Host: localhost:3000
     Cache-Control: no-cache
 
-The response body from the server will contain the `state` of the job and other job information, including a data property with the HTML for the URL if the job has completed:  
+The response body from the server will contain the `state` of the job and other job information, including a data property with the HTML for the URL if the job has completed (truncated here):  
 
     {
         "id": "80",
