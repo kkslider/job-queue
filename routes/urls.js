@@ -5,7 +5,6 @@ var router = require('express').Router();
 var url = require('../queue/urls');
 
 router.post('/', function(req, res) {
-	console.log(req.body);
 	url.create(req.body, function(job) {
 		if (job) {
 			return res.json({
@@ -22,7 +21,7 @@ router.post('/', function(req, res) {
 });
 
 router.get('/:id*', function(req, res) {
-	var jobId = req.param('id');
+	var jobId = req.params.id;
 	return url.get(jobId, function(job) {
 		return res.json(job);
 	}, function(err) {

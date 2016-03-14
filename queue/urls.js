@@ -19,7 +19,6 @@ queue.on('error', function(err) {
 });
 
 function getHtml(data, done) {
-	console.log(data);
 	request(data.url, function(err, res, body) {
 		if (!err && res.statusCode === 200) {
 			data.content = body;
@@ -29,7 +28,6 @@ function getHtml(data, done) {
 }
 
 function createUrl(data, success, fail) {
-	console.log('hello: ' + data);
 	getHtml(data, function() {
 		var job = queue.create('url', data) 
 			.priority('normal')
