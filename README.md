@@ -32,29 +32,13 @@ The response body from the server will contain the id of the newly created job:
     Host: localhost:3000
     Cache-Control: no-cache
 
-The response body from the server will contain the `state` of the job and other job information, including a data property with the HTML for the URL if the job has completed (truncated here):  
+The response body from the server will contain the `state` of the job and other job information, including the html of the URL if the job is complete (truncated here):  
 
     {
-        "id": "80",
-        "type": "url",
-        "data": {
-            "url": "https://www.google.com",
-            "content": "<!doctype html><html itemscope=\"\" itemtype=\"http://schema.org/WebPage\" lang=\"en\"><head><meta content=\"Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for.\" name=\"description\"><meta content=\"noodp\" name=\"robots\"><meta content=\"text/html; charset=UTF-8\" http-equiv=\"Content-Type\"><meta content=\"/images/branding/googleg/1x/googleg_standard_color_128dp.png\" itemprop=\"image\"><title>Google</title></div></body></html>"
-         },
-        "priority": 0,
-        "progress": "100",
+        "html": "<!doctype html><html itemscope=\"\" itemtype=\"http://schema.org/WebPage\" lang=\"en\"><head><meta content=\"Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for.\" name=\"description\"><meta content=\"noodp\" name=\"robots\"><meta content=\"text/html; charset=UTF-8\" http-equiv=\"Content-Type\"></body></html>",
         "state": "complete",
-        "created_at": "1457967824314",
-        "promote_at": "1457967824314",
-        "updated_at": "1457967824331",
-        "started_at": "1457967824326",
-        "duration": "5",
-        "workerId": "kue:Benjamins-MacBook-Pro.local:4738:url:1",
-        "attempts": {
-            "made": 1,
-            "remaining": 4,
-            "max": 5
-        }
+        "url": "https://www.google.com",
+        "jobId": "80"
     }
 
 ## Is there a UI to view all my jobs?
