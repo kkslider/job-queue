@@ -12,7 +12,6 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/urls', urls);
-
 app.listen(port);
 
 module.exports = app;

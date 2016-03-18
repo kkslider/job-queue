@@ -2,10 +2,9 @@
 'use strict';
 
 var supertest = require('supertest');
-var app = require('../app');
-
-var api = supertest(app);
 var test = require('tape');
+var app = require('../app');
+var api = supertest(app);
 
 test.onFinish(function() {
 	process.exit();
@@ -37,8 +36,7 @@ test('User sends a GET request to /urls/id', function(t) {
 		.expect(200)
 		.end(function(err, res) {
 			t.error(err, 'No errors');
-			t.ok(res.body.state, 'Should respond with the job state');
-			t.ok(res.body.data.content, 'Should have a content property for the html');
+			t.ok(res.body.state, 'Should respond with a job status for the user');
 			t.end();
 		}); 
 });

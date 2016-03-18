@@ -2,20 +2,27 @@
 'use strict';
 
 var CONCURRENT_JOBS = 20;
+var redis = require('redis');
 var kue = require('kue');
 var request = require('request');
+
+var redisClient = redis.createClient();
 var queue = kue.createQueue();
+
+redisClient.on('connect', function() {
+	console.log('Connected to Redis');
+});
 
 queue.watchStuckJobs();
 
-queue.on('ready', function() {
-	console.log('Queue is ready');
-});
+queue.on('job complete', function(id, result) {
+	kue.Job.get(id, function(err, job) {
+		if (err) {
+			return;
+		}
 
-queue.on('error', function(err) {
-	console.error('An error occurred in the queue');
-	console.error(err);
-	console.error(err.stack);
+		redisClient.hset(job.id, 'state', 'complete');
+	});
 });
 
 function getHtml(data, done) {
@@ -28,34 +35,43 @@ function getHtml(data, done) {
 }
 
 function createUrl(data, success, fail) {
-	getHtml(data, function() {
-		var job = queue.create('url', data) 
-			.priority('normal')
-			.attempts(5)
-			.backoff(true)
-			.removeOnComplete(false)
-			.on('enqueue', function() {
-				success(job);
-			})
-			.on('failed', function(err) {
-				fail(err);
-			})
-			.save();		
-	});
+	var job = queue.create('url', data) 
+		.priority('normal')
+		.attempts(5)
+		.backoff(true)
+		.removeOnComplete(false)
+		.on('enqueue', function() {
+			success(job);
+		})
+		.on('failed', function(err) {
+			fail(err);
+		})
+		.save();		
 }
 
 function getUrl(jobId, success, fail) {
-	kue.Job.get(jobId, function(err, job) {
+	redisClient.hgetall(jobId, function(err, res) {
 		if (err) {
 			fail(err);
+			return;
+		}
+		
+		if (res && res.state === 'complete') {
+			success(res);
 		} else {
-			success(job);
+			success({ state: 'Job not complete' });
 		}
 	});
 }
 
 queue.process('url', CONCURRENT_JOBS, function(job, done) {
-	done();
+	getHtml(job.data, function() {
+		redisClient.hmset(job.id, {
+			jobId: job.id,
+			url: job.data.url,
+			html: job.data.content
+		}, done);
+	});
 });
 
 module.exports = {
